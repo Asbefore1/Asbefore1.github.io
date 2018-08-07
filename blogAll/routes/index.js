@@ -2,8 +2,11 @@ const Router=require('express').Router;
 const router=Router();
 //显示首页
 router.get('/',(req,res)=>{
-	
-	res.render('main/index');
+	// console.log(req.cookies.get('userinfo'));
+	// console.log(req.userinfo);
+	res.render('main/index',{
+		userinfo:req.userinfo
+	});
 	//在浏览器地址栏里输入127.0.0.1:3000
 	//请求到app.js里面的app.use('/',require('./routes/index.js'))
 	//接着走到routes/index.js,看到是get请求和/

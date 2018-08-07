@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
   },
   isAdmin:{//判断是不是管理员
   	type:Boolean,
-  	default:false
+  	default:true
   }
 });
 

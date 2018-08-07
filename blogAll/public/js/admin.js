@@ -1,0 +1,19 @@
+//退出处理
+(function($){
+	$('#logout').on('click',function(){//退出时销毁cookies
+		$.ajax({
+			url:'/user/logout',
+			type:'get',
+			dataType:'json'
+		})
+		.done(function(result){
+			console.log(result)
+			if(result.code===0){//退出成功
+				window.location.href='/';
+			}
+		})
+		.fail(function(err){
+			console.log('1:::',err);
+		})
+	})
+})(jQuery);

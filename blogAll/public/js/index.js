@@ -47,7 +47,7 @@
 				dataType:'json',
 				data:{
 					username:username,
-					password:password
+					password:password,										
 				}
 			})
 			.done(function(result){//成功
@@ -100,9 +100,15 @@
 			})
 			.done(function(result){//登录成功
 				if(result.code===0){
+					//第一次进来的时候userinfo是一个空对象,也就是没有cookies数据
+					//$login.hide()隐藏,userinfo是空,相当于下面两行代码失效了
+					//所以一点提交会消失,用重新刷新页面
+					/*
 					$login.hide();
 					$userInfo.find('span').html(result.data.username);
 					$userInfo.show();
+					*/
+					window.location.reload();
 				}else{
 					$login.find('.err').html(result.errmessage);
 				}
@@ -113,4 +119,21 @@
 		}
 	})
 	
+
+	//退出处理
+	$('.logout').on('click',function(){//退出时销毁cookies
+		$.ajax({
+			url:'/user/logout',
+			type:'get',
+			dataType:'json'
+		})
+		.done(function(result){
+			if(result.code===0){//退出成功
+				window.location.reload();
+			}
+		})
+		.fail(function(err){
+			console.log(err);
+		})
+	})
 })(jQuery)

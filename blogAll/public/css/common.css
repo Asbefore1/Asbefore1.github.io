@@ -46,7 +46,7 @@ body{
 	height: 20px;
 	line-height: 20px;
 }
-.register .login-out, .welcome{
+.register .logout, .welcome{
 	padding: 10px;
 }
 .register .welcome span{

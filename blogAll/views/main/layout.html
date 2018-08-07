@@ -38,6 +38,20 @@
 					{% block content %}{% endblock %}
 				</div>
 				<div class="col-md-4 hidden-xs hidden-sm">
+					{% if userinfo._id %}<!-- 判断用户是否登录过了 -->
+					<!-- 欢迎登录 -->
+					<div class="form-horizontal  register" id="userinfo">
+						<div class="welcome">							
+							欢迎<span>{{ userinfo.username }}</span>
+							{% if userinfo.isAdmin %}
+							<a href="/admin" class="link">进入管理中心</a>
+							{% else %}
+							<a href="javascript:;" class="link">进入用户中心</a>
+							{% endif %}
+						</div>
+						<a href='javascript:;' class="logout link">退出</a>
+					</div>
+					{% else %}					
 					<!-- 注册框 -->
 					<div class="form-horizontal register" id="register" style="display: none;">
 						<div class="form-group" id="user-label">
@@ -100,14 +114,7 @@
 						    </div>
 						</div>
 					</div>
-					<!-- 欢迎登录 -->
-					<div class="form-horizontal  register" id="userinfo" style="display: none;">
-						<div class="welcome">
-							欢迎<span>tom</span>
-						</div>
-						<a href='javascript:;' class="login-out link">退出</a>
-					</div>
-
+					{% endif %}
 					<!-- 图片 -->
 					<a href="#" class="thumbnail">
 						<img src="images/ad2.jpg" class="img-responsive" alt="Responsive image">
