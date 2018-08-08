@@ -15,23 +15,63 @@ router.use((req,res,next)=>{
 	}
 })
 
-
+//显示管理员首页
 router.get('/',(req,res)=>{
 	res.render('admin/index',{
 		userInfo:req.userInfo
 	})
 })
 
+
 router.get('/users',(req,res)=>{
-	//获取所有用户信息,分配给模板
+	//需要限制的页数
+	let limit=2;
 
-	UserModel.find()
-	.then((users)=>{
-		console.log(users);
-	})
-	res.render('admin/user_list',{
-		userInfo:req.userInfo
-	})
+	//需要显示的页码	
+	let page=req.query.page || 1;
+
+	if(page<=1){
+		page=1
+	}
+
+	UserModel.estimatedDocumentCount({})
+	.then((count)=>{
+		// console.log(count);
+		//总页数=总信息条数/每页显示几条
+		let pages=Math.ceil(count/limit);//向上取整,即剩下1条也显示
+		if(page>pages){
+			page=pages
+		}
+
+		let list=[];
+		for(var i=1;i<=pages;i++){//i是第几页
+			list.push(i)
+		}
+
+
+		//需要跳过的页数
+		let skip=(page-1)*limit;
+		//第一页显示2条  跳过0条
+		//第二页显示2条  跳过2条
+		//第三页显示2条  跳过4条
+		//综上  发现规律：skip=(page-1)*limit
+
+		//获取所有用户信息,分配给模板	
+		UserModel.find({},'_id username isAdmin')//'_id username isAdmin'只显示这么多
+		.skip(skip)
+		.limit(limit)
+		.then((users)=>{
+			// console.log(page);
+			res.render('admin/user_list',{
+				userInfo:req.userInfo,
+				users:users,
+				page:page*1, //默认page是字符串,做了字符串拼接,*1变成数字
+				list:list
+
+			})
+			// console.log(page)
+			// console.log(req.userInfo)
+		})
+	})	
 })
-
 module.exports=router;
