@@ -7,13 +7,12 @@
 			dataType:'json'
 		})
 		.done(function(result){
-			console.log(result)
 			if(result.code===0){//退出成功
 				window.location.href='/';
 			}
 		})
 		.fail(function(err){
-			console.log('1:::',err);
+			console.log(err);
 		})
 	})
 })(jQuery);

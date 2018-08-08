@@ -23,6 +23,7 @@ router.post('/register',(req,res)=>{
 			new UserModel({
 				username:body.username,
 				password:hmac(body.password),
+				// isAdmin:true
 			})
 			.save((err,newUser)=>{
 				if(!err){//插入数据库成功
@@ -60,11 +61,12 @@ router.post('/login',(req,res)=>{
 				isAdmin:user.isAdmin
 			}
 			//设置cookies
-			req.cookies.set('userinfo',JSON.stringify(result.data));
+			req.cookies.set('userInfo',JSON.stringify(result.data));
 			res.json(result)
 			//把带cookies的数据(键就是userinfo,id就是值)和result里面的数据返回到前端页面
 			*/
-			req.session.userinfo={
+		
+			req.session.userInfo={
 				_id:user._id,
 				username:user.username,
 				isAdmin:user.isAdmin
@@ -86,7 +88,7 @@ router.get('/logout',(req,res)=>{
 		code:0,//0代表成功
 		errmessage:''
 	}
-	// req.cookies.set('userinfo',null);
+	// req.cookies.set('userInfo',null);
 	req.session.destroy();
 	res.json(result);
 })

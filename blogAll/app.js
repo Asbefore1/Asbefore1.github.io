@@ -1,3 +1,4 @@
+//项目入口文件
 const express=require('express');
 const swig=require('swig');
 const bodyParser=require('body-parser');
@@ -50,11 +51,12 @@ app.use((req,res,next)=>{
 })
 */
 
-
+//cookie+session  cookies是从前台发过来,session存到后台
+//发过来之后session从后台去取,找匹配的id
 app.use(session({
 	//设置cookie名称
 	name:'pig',
-	//用它来对session cookie签名，防止篡改
+	//用它来对session cookie加盐,防止篡改
 	secret:'ssahfgsdfuaefjwyef',
 	//强制保存session即使它并没有变化
 	resave:true,
@@ -68,9 +70,11 @@ app.use(session({
     store:new MongoStore({ mongooseConnection: mongoose.connection })   
 }))
 
+//取出userInfno用户信息,应该先存,在登录的时候存下来用户的信息
 app.use((req,res,next)=>{
-	// console.log(session);
-	req.userinfo=req.session.userinfo || {};
+	// console.log(req.session);
+	//使用session
+	req.userInfo=req.session.userInfo || {};
 	next();
 })
 

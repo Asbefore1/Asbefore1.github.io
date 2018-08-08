@@ -38,12 +38,12 @@
 					{% block content %}{% endblock %}
 				</div>
 				<div class="col-md-4 hidden-xs hidden-sm">
-					{% if userinfo._id %}<!-- 判断用户是否登录过了 -->
+					{% if userInfo._id %}<!-- 判断用户是否登录过了 -->
 					<!-- 欢迎登录 -->
-					<div class="form-horizontal  register" id="userinfo">
+					<div class="form-horizontal register" id="userinfo">
 						<div class="welcome">							
-							欢迎<span>{{ userinfo.username }}</span>
-							{% if userinfo.isAdmin %}
+							欢迎<span>{{ userInfo.username }}</span>
+							{% if userInfo.isAdmin %}<!-- 判断是true/false -->
 							<a href="/admin" class="link">进入管理中心</a>
 							{% else %}
 							<a href="javascript:;" class="link">进入用户中心</a>

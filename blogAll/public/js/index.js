@@ -100,12 +100,12 @@
 			})
 			.done(function(result){//登录成功
 				if(result.code===0){
-					//第一次进来的时候userinfo是一个空对象,也就是没有cookies数据
-					//$login.hide()隐藏,userinfo是空,相当于下面两行代码失效了
+					//第一次进来的时候userInfo是一个空对象,也就是没有cookies数据
+					//$login.hide()隐藏,userInfo是空,相当于下面两行代码失效了
 					//所以一点提交会消失,用重新刷新页面
 					/*
 					$login.hide();
-					$userInfo.find('span').html(result.data.username);
+					$userInfo.find('span').html(req.data.username);
 					$userInfo.show();
 					*/
 					window.location.reload();
