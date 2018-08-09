@@ -7,9 +7,10 @@
    		<th>用户名</th>
    		<th>是否是管理员</th>
    	</tr>
-   	{% for user in users %}<!-- for循环 --> <!-- 语法{ % for key/val in arr % } -->
-  											<!-- <p>{ { key } } - { { val } }</p> -->
-											<!-- { % endfor % } -->
+      <!-- for循环 --> 
+   	{% for user in users %}<!-- 语法{ % for key/val in arr % }-->
+  									<!-- <p>{ { key } } - { { val } }</p> -->
+									<!-- { % endfor % } -->
    	<tr>
    		<td>{{ user._id.toString() }}</td>
    		<td>{{ user.username }}</td>
@@ -23,25 +24,7 @@
    	</tr>
    	{% endfor %}  	
 </table>
-<nav aria-label="Page navigation">
-  <ul class="pagination">
-    <li>
-      <a href="/admin/users?page={{ page-1 }}" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-    {% for i in list %}
-	    {% if i == page %}
-	    	<li><a href="javascript:;">{{ i }}</a></li>
-	    {% else %}
-	    	<li><a href="/admin/users?page={{ i }}">{{ i }}</a></li>
-	    {% endif %}   
-    {% endfor %}
-    <li>
-      <a href="/admin/users?page={{ page+1 }}" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-  </ul>
-</nav>
+{% if pages> 1 %}
+   {% include './pagination.html' %}
+{% endif %}
 {% endblock %}

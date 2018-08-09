@@ -17,7 +17,7 @@ router.use((req,res,next)=>{
 	}
 })
 
-//显示分类管理首页
+//显示文章管理首页
 router.get('/',(req,res)=>{
 	/*
 	CategoryModel.find({})//找到所有的
@@ -32,6 +32,7 @@ router.get('/',(req,res)=>{
 		// console.log(req.userInfo)
 	})
 	*/
+	/*
 	let options={
 		page:req.query.page,//需要显示的页码
 		model:CategoryModel,//操作的数据模型
@@ -54,12 +55,16 @@ router.get('/',(req,res)=>{
 		// console.log(data.page)
 		// console.log(data.list)
 	})
+	*/
+	res.render('admin/article_list',{
+		userInfo:req.userInfo,		
+	})
 })
 
 
 //显示新增页面
 router.get('/add',(req,res)=>{
-	res.render('admin/category_add_edit',{
+	res.render('admin/article_add',{
 		userInfo:req.userInfo
 	})
 })

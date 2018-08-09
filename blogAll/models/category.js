@@ -6,8 +6,7 @@ const CategorySchema = new mongoose.Schema({
   },
   order:{
   	type:Number
-  },
-
+  }
 });
 
 

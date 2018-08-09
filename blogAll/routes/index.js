@@ -1,12 +1,19 @@
 const Router=require('express').Router;
+const CategoryModel=require('../models/category.js');
 const router=Router();
 //显示首页
 router.get('/',(req,res)=>{
 	// console.log(req.cookies.get('userInfo'));
 	// console.log(req.userinfo);
-	res.render('main/index',{
-		userInfo:req.userInfo
-	});
+	CategoryModel.find({},'_id name')
+	.sort({order:1})
+	.then((categories)=>{
+		res.render('main/index',{
+			userInfo:req.userInfo,
+			categories:categories
+		});
+	})
+	
 	//在浏览器地址栏里输入127.0.0.1:3000
 	//请求到app.js里面的app.use('/',require('./routes/index.js'))
 	//接着走到routes/index.js,看到是get请求和/

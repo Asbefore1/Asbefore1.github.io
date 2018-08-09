@@ -1,5 +1,6 @@
 const Router=require('express').Router;
 const UserModel=require('../models/user.js');
+const pagination=require('../util/pagination.js');
 const router=Router();
 //显示首页
 
@@ -24,54 +25,30 @@ router.get('/',(req,res)=>{
 
 
 router.get('/users',(req,res)=>{
-	//需要限制的页数
-	let limit=2;
+	//获取所有用户的信息,分配给模板
 
-	//需要显示的页码	
-	let page=req.query.page || 1;
-
-	if(page<=1){
-		page=1
+	let options={
+		page:req.query.page,//需要显示的页码
+		model:UserModel,//操作的数据模型
+		query:{},//查询条件
+		projection:'_id username isAdmin',//投影,就是id,name,isAdmin
+		sort:{_id:-1}//排序
 	}
 
-	UserModel.estimatedDocumentCount({})
-	.then((count)=>{
-		// console.log(count);
-		//总页数=总信息条数/每页显示几条
-		let pages=Math.ceil(count/limit);//向上取整,即剩下1条也显示
-		if(page>pages){
-			page=pages
-		}
-
-		let list=[];
-		for(var i=1;i<=pages;i++){//i是第几页
-			list.push(i)
-		}
-
-
-		//需要跳过的页数
-		let skip=(page-1)*limit;
-		//第一页显示2条  跳过0条
-		//第二页显示2条  跳过2条
-		//第三页显示2条  跳过4条
-		//综上  发现规律：skip=(page-1)*limit
-
-		//获取所有用户信息,分配给模板	
-		UserModel.find({},'_id username isAdmin')//'_id username isAdmin'只显示这么多
-		.skip(skip)
-		.limit(limit)
-		.then((users)=>{
-			// console.log(page);
-			res.render('admin/user_list',{
-				userInfo:req.userInfo,
-				users:users,
-				page:page*1, //默认page是字符串,做了字符串拼接,*1变成数字
-				list:list
-
-			})
-			// console.log(page)
-			// console.log(req.userInfo)
+	pagination(options)//promise对象
+	.then((data)=>{//成功
+		res.render('admin/user_list',{
+			userInfo:req.userInfo,
+			users:data.docs,//每页有两个对象[{qwy,admin}],[{test1,test2}]
+			page:data.page,//当前是第几页
+			list:data.list,//[1,2,3,4]
+			pages:data.pages,
+			url:'/admin/users'
 		})
-	})	
+		// console.log(data.docs)
+		// console.log(data.page)
+		// console.log(data.list)
+	})
 })
+
 module.exports=router;
