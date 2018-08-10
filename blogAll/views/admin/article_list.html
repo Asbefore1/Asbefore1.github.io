@@ -5,10 +5,30 @@
 <a href="/article/add" class="btn btn-primary btn-add">新增文章</a>
 <table class="table table-striped">
    	<tr>
-   		<th>id</th>
    		<th>分类名称</th>
-   		<th>排序</th>
+   		<th>标题</th>   		
+   		<th>创建时间</th>
+   		<th>作者</th>
+   		<th>点击量</th>
    		<th>操作</th>
    	</tr>
+   		{% for article in articles %}
+   		<tr>
+   			<!-- 文章属于哪个分类,在对应的分类里面拿出分类的名字 -->
+   			<td>{{ article.category.name }}</td>
+   			<td>{{ article.title }}</td> 			
+   			<td>{{ article.createdAt | date('Y年m月d日 h:i:s',-8*60)}}</td><!-- 过滤器 -->
+   			<td>{{ article.user.username }}</td>
+   			<td>{{ article.click }}</td>	  				
+   			<td>
+   				<a href="/view/{{ article._id.toString() }}">查看</a><!-- a链接是一个get请求 -->
+   				<a href="/article/edit/{{ article._id.toString() }}">编辑</a><!-- a链接是一个get请求 -->
+   				<a href="/article/delete/{{ article._id.toString() }}">删除</a>
+   			</td>
+   		</tr>
+   		{% endfor %} 
 </table>
+{% if pages> 1 %}
+   {% include './pagination.html' %}
+{% endif %}
 {% endblock %}

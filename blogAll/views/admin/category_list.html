@@ -5,16 +5,16 @@
 <a href="/category/add" class="btn btn-primary btn-add">新增列表</a>
 <table class="table table-striped">
    	<tr>
-   		<th>id</th>
-   		<th>名称</th>
+         <th>分类名称</th>
+   		<th>id</th>   		
    		<th>排序</th>
    		<th>操作</th>
    	</tr>
    	{% for category in categories %}
          <!-- category是categories的一个对象,categories是数组,里面放了很多对象 -->
    	<tr>
-   		<td>{{ category._id.toString() }}</td>
-   		<td>{{ category.name }}</td>
+         <td>{{ category.name }}</td>
+   		<td>{{ category._id.toString() }}</td>  		
    		<td>{{ category.order }}</td>
    		<td>
    			<a href="/category/edit/{{ category._id.toString() }}">编辑</a><!-- a链接是一个get请求 -->

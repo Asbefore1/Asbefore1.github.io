@@ -5,3 +5,10 @@
 .btn-add{
 	margin-bottom: 10px;
 }
+.ck-editor__editable{
+	min-height: 300px;
+}
+.intro{
+	margin-left: 100px;
+	height: 50px;
+}

@@ -5,6 +5,7 @@
 		projection://投影,就是id,name,isAdmin
 		query://查询条件
 		sort://排序
+		populate:[]
 	}
 */
 let pagination=(options)=>{
@@ -52,8 +53,14 @@ let pagination=(options)=>{
 			//第三页显示2条  跳过4条
 			//综上  发现规律：skip=(page-1)*limit
 
-			//获取所有用户信息,分配给模板	
-			options.model.find(options.query,options.projection)//'_id username isAdmin'只显示这么多
+			//获取所有信息,分配给模板
+			let query=options.model.find(options.query,options.projection);//'_id username isAdmin'只显示这么多
+			if(options.populate){
+				for(let i=0;i<options.populate.length;i++){
+					query=query.populate(options.populate[i])
+				}
+			}
+			query
 			.sort(options.sort)
 			.skip(skip)
 			.limit(limit)
