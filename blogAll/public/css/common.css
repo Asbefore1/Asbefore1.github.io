@@ -131,3 +131,6 @@ body{
 .footer{
 	text-align: center;
 }
+#comment-btn{
+	padding: 25px 10px;
+}

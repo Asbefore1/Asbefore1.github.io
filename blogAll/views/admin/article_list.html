@@ -17,7 +17,7 @@
    			<!-- 文章属于哪个分类,在对应的分类里面拿出分类的名字 -->
    			<td>{{ article.category.name }}</td>
    			<td>{{ article.title }}</td> 			
-   			<td>{{ article.createdAt | date('Y年m月d日 h:i:s',-8*60)}}</td><!-- 过滤器 -->
+   			<td>{{ article.createdAt | date('Y年m月d日 H:i:s',-8*60)}}</td><!-- 过滤器 -->
    			<td>{{ article.user.username }}</td>
    			<td>{{ article.click }}</td>	  				
    			<td>

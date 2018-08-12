@@ -136,4 +136,134 @@
 			console.log(err);
 		})
 	})
+
+
+
+
+	//发送文章列表的请求
+	 $('#page').on('click','a',function(){//通过page委托代理a
+	 	var $this = $(this);//点那个a,this就是哪个
+	 	// console.log(this)
+	 	var page = 1;
+	 	//获取当前页
+	 	var currentPage = $('#page').find('.active a').html();
+
+	 	var label=$this.attr('aria-label');
+	 	if(label == 'Previous'){//上一页
+	 		page = currentPage - 1;
+	 	}else if(label == 'Next'){//下一页
+	 		page = currentPage*1 + 1;
+	 	}else{
+	 		page = $(this).html();
+	 	} 
+
+	 	var query='page='+page;
+
+	 	var category=$('#cate-id').val();
+
+	 	if(category){
+	 		query += "&category=" + category;
+	 	}
+
+	 	$.ajax({
+	 		url:'/articles?'+query,
+	 		type:'get',
+	 		dataType:'json'//返回数据的类型
+	 	})
+	 	.done(function(result){//result就是从routes文件夹中的index.js中的data
+	 		if(result.code == 0){
+	 			buildArticleList(result.data.docs);
+	 			buildPage(result.data.list,result.data.page)
+	 		}
+	 		// console.log(result)
+	 	})
+	 	.fail(function(err){
+	 		console.log(err)
+	 	})
+
+	 })
+
+	 function buildArticleList(articles){
+	 	var html = '';
+	 	for(var i = 0;i<articles.length;i++){
+	 	var data = moment(articles[i].createdAt).format('YYYY年MM月DD日 H:mm:ss ');
+	 	html +=`<div class="panel panel-default content-item">
+			  <div class="panel-heading">
+			    <h3 class="panel-title">
+			    	<a href="/view/${articles[i]._id}" class="link" target="_blank">${ articles[i].title }</a>
+				</h3>
+			  </div>
+			  <div class="panel-body">
+				${ articles[i].intro }
+			  </div>
+			  <div class="panel-footer">
+				<span class="glyphicon glyphicon-user"></span>
+				<span class="panel-footer-text text-muted">
+					${ articles[i].user.username }
+				</span>
+				<span class="glyphicon glyphicon-th-list"></span>
+				<span class="panel-footer-text text-muted">
+					${ articles[i].category.name }
+				</span>
+				<span class="glyphicon glyphicon-time"></span>
+				<span class="panel-footer-text text-muted">
+					${ data }
+				</span>
+				<span class="glyphicon glyphicon-eye-open"></span>
+				<span class="panel-footer-text text-muted">
+					<em>${ articles[i].click }</em>已阅读
+				</span>
+			  </div>
+			</div>`
+		}
+		$('#article-list').html(html);		
+	}
+	
+	function buildPage(list,page){
+	 	var html = `<li>
+				      <a href="javascript:;" aria-label="Previous">
+				        <span aria-hidden="true">&laquo;</span>
+				      </a>
+				    </li>`
+
+	    for(i in list){
+	    	if(list[i] == page){
+	    		html += `<li class="active"><a href="javascript:;">${list[i]}</a></li>`;
+	    	}else{
+	    		html += `<li><a href="javascript:;">${list[i]}</a></li>`
+	    	}
+	    }
+
+	 	html += `<li>
+			      <a href="javascript:;" aria-label="Next">
+			        <span aria-hidden="true">&raquo;</span>
+			      </a>
+			    </li>`
+		$('#page .pagination').html(html)	    
+	}
+
+
+	//发布评论
+	$('#comment-btn').on('click',function(){
+		var articleId=$('#article-id').val();
+		var commentContent=$('#comment-content').val();
+		if(commentContent.trim()==''){
+			$('.err').html('评论内容不能为空');
+		}else{
+			$('.err').html();
+		}
+
+		$.ajax({
+			url:'/comment/add',
+			type:'post',
+			dataType:'json',
+			data:{id:articleId,content:commentContent}
+		})
+		.done(function(result){
+			console.log(result)
+		})
+		.fail(function(err){
+			console.log(err)
+		})
+	})
 })(jQuery)

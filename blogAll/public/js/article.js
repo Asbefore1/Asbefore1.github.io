@@ -27,7 +27,7 @@
 		}
 
 		let AtricleIntro=$('[name="intro"]').val();
-		console.log(AtricleIntro)
+		// console.log(AtricleIntro)
 		if(AtricleIntro.trim()==''){
 			$('.err').eq(1).html('简介不能为空');
 			return false;

@@ -26,7 +26,7 @@ let pagination=(options)=>{
 			page=1
 		}
 
-		options.model.estimatedDocumentCount(options.query)
+		options.model.countDocuments(options.query)
 		.then((count)=>{//count总信息条数
 			// console.log(count);
 			//总页数=总信息条数/每页显示几条

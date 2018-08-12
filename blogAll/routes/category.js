@@ -123,35 +123,42 @@ router.post('/edit',(req,res)=>{
 	// <input type="hidden" name="id" value="{{ category._id.toString() }}">
 	// console.log(body)body里面的id是从这个里面获取出来的,不会在页面上显示
 	//但会自动加一个id
-	CategoryModel.findOne({name:body.name})//body.name新写入的name去数据库里找
-	.then((category)=>{//是从数据库里找到的对象
-		//顺序不一样也可以更新成功,不一样的必须是name
-		//if(category)的意思是,如果有外面传进来一样的对象的话就失败
-		if(category && category.order==body.order){//在数据库里找到说明数据库里已经有了,不能再写一个,则失败
+	CategoryModel.findById(body.id)
+	.then((category)=>{
+		if(category.name==body.name && category.order==body.order){
 			res.render('admin/fail',{
 				userInfo:req.userInfo,
-				message:'编辑失败,已有同名分类,请重新输入',
+				message:'请修改数据后提交',
 			})
-			// console.log(category)
-		}else{//在数据库没里找到,说明数据库里没有,可以重新写进去一个
-			//eg:5b6bd8c663f2f001f4203def就是body.id找到这个id去更新它
-			CategoryModel.update({_id:body.id},{name:body.name,order:body.order},(err,raw)=>{
-				//回调函数
-				if(!err){
-					res.render('admin/success',{
-						userInfo:req.userInfo,
-						message:'修改分类成功',
-						url:'/category',
-					})
-					// console.log(body.name)
-					// console.log(body.id)
-				}else{
+		}else{
+			CategoryModel.findOne({name:body.name,_id:{$ne:body.id}})
+			.then((newCate)=>{
+				if(newCate){
 					res.render('admin/fail',{
 						userInfo:req.userInfo,
-						message:'修改分类失败,数据库操作失败',
+						message:'编辑分类失败,已有同名分类,请重新输入',
 					})
+				}else{//在数据库没里找到,说明数据库里没有,可以重新写进去一个
+					//eg:5b6bd8c663f2f001f4203def就是body.id找到这个id去更新它
+					CategoryModel.update({_id:body.id},{name:body.name,order:body.order},(err,raw)=>{
+						//回调函数
+						if(!err){
+							res.render('admin/success',{
+								userInfo:req.userInfo,
+								message:'修改分类成功',
+								url:'/category',
+							})
+							// console.log(body.name)
+							// console.log(body.id)
+						}else{
+							res.render('admin/fail',{
+								userInfo:req.userInfo,
+								message:'修改分类失败,数据库操作失败',
+							})
+						}
+					})			
 				}
-			})			
+			})
 		}
 	})
 })

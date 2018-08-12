@@ -4,6 +4,9 @@ const CategoryModel=require('../models/category.js');
 const ArticleModel=require('../models/article.js');
 const pagination=require('../util/pagination.js');
 const router=Router();
+
+
+
 //显示博客首页
 router.use((req,res,next)=>{
 	if(req.userInfo.isAdmin){	
@@ -26,17 +29,7 @@ router.get('/',(req,res)=>{
 		console.log(docs)
 	})
 	*/
-	let options={//分页
-		page:req.query.page,//需要显示的页码
-		model:ArticleModel,//操作的数据模型
-		query:{},//查询条件
-		projection:'-__v',//投影,就是id,name,isAdmin,不显示__v
-		sort:{order:-1},//降序,最先插入的排后面,最后插入的排前面
-		//populate的意思是去category集合里找,只找名字是name的
-		populate:[{path:'category',select:'name'},{path:'user',select:'username'}]
-	}
-	
-	pagination(options)//promise对象
+	ArticleModel.getPaginationArticles(req)
 	.then((data)=>{//成功
 		// console.log(data.docs)//有分类的id和每篇文章自己的id
 		res.render('admin/article_list',{
@@ -97,12 +90,12 @@ router.post('/add',(req,res)=>{
 
 
 
-
 //显示编辑页面
 router.get('/edit/:id',(req,res)=>{
 	let id=req.params.id;//字符串
 	// console.log(id);
-	CategoryModel.find()
+	CategoryModel.find({},'_id name')
+	.sort({order:1})
 	.then((categories)=>{//categories是列表,找到所有的种类		
 		ArticleModel.findById(id)
 		.then((article)=>{
@@ -114,9 +107,17 @@ router.get('/edit/:id',(req,res)=>{
 			// console.log('1::',article)
 			// console.log('2::',article.category)
 		})
+		.catch((e)=>{
+			res.render('admin/error',{
+				userInfo:userInfo,
+				message:'获取的文章不存在'
+			})
+		})
 		// console.log('3::',categories)					
 	})	
 })
+
+
 
 //处理编辑请求
 router.post('/edit',(req,res)=>{
@@ -124,6 +125,7 @@ router.post('/edit',(req,res)=>{
 	// console.log(body)//body是修改的内容
 	// console.log('4::',body.category)	
 	let options={
+		category:body.category,
 		title:body.title,
 		content:body.content,
 		intro:body.intro
