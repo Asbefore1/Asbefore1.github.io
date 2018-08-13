@@ -186,7 +186,7 @@
 	 function buildArticleList(articles){
 	 	var html = '';
 	 	for(var i = 0;i<articles.length;i++){
-	 	var data = moment(articles[i].createdAt).format('YYYY年MM月DD日 H:mm:ss ');
+	 	var createdAt = moment(articles[i].createdAt).format('YYYY年MM月DD日 H:mm:ss ');
 	 	html +=`<div class="panel panel-default content-item">
 			  <div class="panel-heading">
 			    <h3 class="panel-title">
@@ -207,7 +207,7 @@
 				</span>
 				<span class="glyphicon glyphicon-time"></span>
 				<span class="panel-footer-text text-muted">
-					${ data }
+					${ createdAt }
 				</span>
 				<span class="glyphicon glyphicon-eye-open"></span>
 				<span class="panel-footer-text text-muted">
@@ -219,7 +219,7 @@
 		$('#article-list').html(html);		
 	}
 	
-	function buildPage(list,page){
+	function buildPage($page,list,page){
 	 	var html = `<li>
 				      <a href="javascript:;" aria-label="Previous">
 				        <span aria-hidden="true">&laquo;</span>
@@ -228,9 +228,9 @@
 
 	    for(i in list){
 	    	if(list[i] == page){
-	    		html += `<li class="active"><a href="javascript:;">${list[i]}</a></li>`;
+	    		html += `<li class="active"><a href="javascript:;">${ list[i] }</a></li>`;
 	    	}else{
-	    		html += `<li><a href="javascript:;">${list[i]}</a></li>`
+	    		html += `<li><a href="javascript:;">${ list[i] }</a></li>`
 	    	}
 	    }
 
@@ -239,31 +239,64 @@
 			        <span aria-hidden="true">&raquo;</span>
 			      </a>
 			    </li>`
-		$('#page .pagination').html(html)	    
+		$page.find('.pagination').html(html)		    
 	}
 
 
-	//发布评论
+	//发布添加评论
+	var $commentPage = $('#comment-page');
 	$('#comment-btn').on('click',function(){
-		var articleId=$('#article-id').val();
-		var commentContent=$('#comment-content').val();
-		if(commentContent.trim()==''){
+		var articleId=$('#article-id').val();//文章的id
+		var commentContent=$('#comment-content').val();//评论的内容
+		if(commentContent.trim()==''){//$.trim(str) 去除字符串两边的空格并返回
 			$('.err').html('评论内容不能为空');
+			return false;
 		}else{
 			$('.err').html();
 		}
-
 		$.ajax({
 			url:'/comment/add',
 			type:'post',
 			dataType:'json',
-			data:{id:articleId,content:commentContent}
+			data:{id:articleId,content:commentContent}//发送到服务器的数据
 		})
 		.done(function(result){
-			console.log(result)
+			if(result.code==0){
+				//1.渲染评论列表
+				buildCommentList(result.data.docs)
+				//2.渲染分页
+				buildPage($commentPage,result.data.list,result.data.page)
+
+				$('#comment-content').val('');
+			}
+			// console.log(result)
 		})
 		.fail(function(err){
 			console.log(err)
 		})
-	})
+
+
+		//构建评论列表
+		function buildCommentList(comments){
+			var html='';			
+			for(var i=0;i<comments.length;i++){
+				var createdAt = moment(comments[i].createdAt).format('YYYY年MM月DD日 H:mm:ss ');
+				html+=`<div class="panel panel-default col-lg-12">
+						  <div class="panel-heading">${ comments[i].user.username } 发表于 ${ createdAt }</div>
+						  <div class="panel-body">
+						   	${ comments[i].content }
+						  </div>
+						</div>`
+			}
+			$('#comment-list').html(html)
+		}
+
+		$commentPage.on('get-data',function(e,result){
+			buildCommentList(result.data.docs)
+		 	buildPage($commentPage,result.data.list,result.data.page)
+		})
+
+		$commentPage.pagination();
+
+	})		
 })(jQuery)

@@ -71,9 +71,10 @@ let pagination=(options)=>{
 					list:list,
 					pages:pages
 				})
-				// console.log(page)
+				// console.log('1:::',docs)
 				// console.log(req.userInfo)
 			})
+			// console.log(query)
 		})	
 	})
 }

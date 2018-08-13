@@ -91,6 +91,7 @@ app.use('/admin',require('./routes/admin.js'))
 app.use('/category',require('./routes/category.js'))
 app.use('/article',require('./routes/article.js'))
 app.use('/comment',require('./routes/comment.js'))
+app.use('/resource',require('./routes/resource.js'))
 
 
 
