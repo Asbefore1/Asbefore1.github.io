@@ -1,5 +1,5 @@
 const Router = require('express').Router;
-
+const hmac=require('../util/hmac.js');
 const UserModel = require('../models/user.js');
 const CommentModel = require('../models/comment.js');
 const pagination = require('../util/pagination.js');
@@ -162,6 +162,28 @@ router.post("/site",(req,res)=>{
 })
 
 
+//显示修改密码页面
+router.get('/password',(req,res)=>{
+	res.render('admin/password',{
+		userInfo:req.userInfo
+	})
+})
 
+
+//修改密码处理页面
+router.post('/password',(req,res)=>{
+	// console.log(req.body)
+	UserModel.update({_id:req.userInfo._id},{
+		password:hmac(req.body.password)
+	})
+	.then(raw=>{
+		req.session.destroy();
+		res.render('admin/success',{
+			userInfo:req.userInfo,
+			message:'修改密码成功',
+			url:'/'
+		})	
+	})
+})
 
 module.exports = router;

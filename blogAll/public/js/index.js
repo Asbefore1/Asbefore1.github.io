@@ -143,7 +143,11 @@
 	var $articlePage = $('#article-page');
 	$articlePage.on('get-data',function(e,result){
 	 	buildArticleList(result.data.docs);
-	 	buildPage($articlePage,result.data.list,result.data.page)
+	 	if(result.data.pages>1){
+	 		buildPage($articlePage,result.data.list,result.data.page)
+	 	}else{
+	 		$articlePage.find('.pagination').html('');
+	 	}
 	})
 	$articlePage.pagination();
 
@@ -234,7 +238,10 @@
 				//1.渲染评论列表
 				buildCommentList(result.data.docs)
 				//2.渲染分页
-				buildPage($commentPage,result.data.list,result.data.page)
+				if(result.data.pages>1){
+					buildPage($commentPage,result.data.list,result.data.page)
+				}
+				
 
 				$('#comment-content').val('')
 				// console.log(result.data.page)
@@ -267,7 +274,10 @@
 	
 	$commentPage.on('get-data',function(e,result){
 		buildCommentList(result.data.docs)
-	 	buildPage($commentPage,result.data.list,result.data.page)
+		if(result.data.pages>1){
+			buildPage($commentPage,result.data.list,result.data.page)
+		}
+	 	
 	 	// console.log(result)
 	})
 	
