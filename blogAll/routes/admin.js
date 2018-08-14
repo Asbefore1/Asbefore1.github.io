@@ -66,6 +66,7 @@ router.post('/uploadImages',upload.single('upload'),(req,res)=>{
 	})
 })
 
+
 //显示用户评论列表
 router.get('/comments',(req,res)=>{
 	CommentModel.getPaginationComments(req)
@@ -79,6 +80,7 @@ router.get('/comments',(req,res)=>{
 		})
 	})
 })
+
 
 //删除评论
 router.get("/comment/delete/:id",(req,res)=>{
@@ -108,18 +110,58 @@ router.get("/site",(req,res)=>{
 		if(!err){
 			let site = JSON.parse(data);
 			res.render('admin/site',{
-					userInfo:req.userInfo,
-					site:site
-			});	
+				userInfo:req.userInfo,
+				site:site
+			})
 		}else{
 			console.log(err)
 		}
 	})
 
 })
+
+
 //处理修改网站配置请求
 router.post("/site",(req,res)=>{
-	console.log(req.body)
+	let body=req.body;
+	let site={
+		author:{
+			name:body.author.name,
+			intro:body.author.intro,
+			image:body.author.image,
+			wechat:body.author.wechat
+		},
+		ads:{
+			url:body.url,
+			paht:body.path
+		},
+		icp:body.icp
+	};
+
+	site.carouseles=[];
+
+	if(body.carouselUrl.length>0 && typeof body.carouselUrl){
+		for(let i=0;i<body.carouselUrl.length;i++){
+
+		}
+	}else{
+		site.carouseles.push()
+	}
+
+
+	site.ads=[];
+
+	if(body.adUrl.length>0 && typeof body.adUrl){
+		for(let i=0;i<body.adUrl.length;i++){
+
+		}
+	}else{
+		site.carouseles.push()
+	}
+	
 })
+
+
+
 
 module.exports = router;

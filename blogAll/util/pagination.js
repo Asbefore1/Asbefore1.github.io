@@ -22,7 +22,7 @@ let pagination=(options)=>{
 			page=parseInt(options.page)
 		}
 		
-		if(page<=1){
+		if(page<=0){
 			page=1
 		}
 

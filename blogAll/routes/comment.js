@@ -2,6 +2,7 @@ const Router=require('express').Router;
 const CommentModel=require('../models/comment.js');
 const router=Router();
 
+
 //添加评论
 router.post('/add',(req,res)=>{
 	let body=req.body;
@@ -26,8 +27,6 @@ router.post('/add',(req,res)=>{
 
 
 
-
-
 //显示评论列表页面
 router.get('/list',(req,res)=>{
 	let article = req.query.id;
@@ -43,5 +42,7 @@ router.get('/list',(req,res)=>{
 		})
 	})
 })
+
+
 
 module.exports=router;

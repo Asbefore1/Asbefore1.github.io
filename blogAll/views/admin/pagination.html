@@ -7,7 +7,7 @@
     </li>
     {% for i in list %}<!-- i是要显示的页数 -->
        {% if i == page %}
-         <li><a href="javascript:;">{{ i }}</a></li>
+         <li class="active"><a href="javascript:;">{{ i }}</a></li>
        {% else %}
          <li><a href="{{ url }}?page={{ i }}">{{ i }}</a></li>
        {% endif %}   

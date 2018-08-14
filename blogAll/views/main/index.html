@@ -29,51 +29,6 @@
 	    	<span class="sr-only">Next</span><!-- 下一个 -->
 	 	</a>
 	</div>
-	
-	<!-- 热门文章列表 -->
-	<div id="article-list">
-		{% for article in articles %}	
-			<div class="panel panel-default content-item">
-			  	<div class="panel-heading">
-			    	<h3 class="panel-title">
-			    		<a href="/view/{{ article._id.toString() }}" class="link" target="_blank">{{ article.title }}</a>
-			    	</h3>
-			  	</div>
-			  	<div class="panel-body">{{article.intro}}</div>
-			  	<div class="panel-footer">
-				 	<span class="glyphicon glyphicon-user"></span>
-				 	<span class="glyphicon-user-text text-muted">{{ article.user.username }}</span>
-				 	<span class="glyphicon glyphicon-th-list"></span>
-				 	<span class="glyphicon-th-list-text text-muted">{{ article.category.name }}</span>
-				 	<span class="glyphicon glyphicon-time"></span>
-				 	<span class="glyphicon-time-text text-muted">{{ article.createdAt | date('Y年m月d日 H:i:s',-8*60)}}</span>
-				 	<span class="glyphicon glyphicon-eye-open"></span>
-				 	<span class="glyphicon-eye-open-text text-muted"><em>{{ article.click }}已阅读</em></span>
-				</div>
-			</div>
-		{% endfor %}
-	</div>
+{% include './article_list.html' %}	
 
-	<!-- 热门文章列表分页 -->
-	<nav aria-label="Page navigation" id="page">
-		<ul class="pagination">
-		    <li><!-- 上一页 -->
-		      <a href="javascript:;" aria-label="Previous">
-		        <span aria-hidden="true">&laquo;</span>
-		      </a>
-		    </li>
-		    {% for i in list %}<!-- i是当前显示的页数 -->
-		       {% if i == page %}
-		         <li class="active"><a href="javascript:;">{{ i }}</a></li>
-		       {% else %}
-		         <li><a href="javascript:;">{{ i }}</a></li>
-		       {% endif %}   
-		    {% endfor %}
-		    <li><!-- 下一页 -->
-		      <a href="javascript:;" aria-label="Next">
-		        <span aria-hidden="true">&raquo;</span>
-		      </a>
-		    </li>
-		</ul>
-	</nav>
 {% endblock %}

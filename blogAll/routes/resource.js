@@ -5,16 +5,17 @@ const ResourceModel=require('../models/resource.js');
 const pagination=require('../util/pagination.js');
 const multer=require('multer');
 
-let storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/resource')
+    cb(null, 'public/resource/')
   },
   filename: function (req, file, cb) {
     cb(null, Date.now()+path.extname(file.originalname))
   }
+
 })
 
-let upload = multer({ storage: storage })
+const upload = multer({ storage: storage })
 
 const router=Router();
 //显示首页
@@ -39,13 +40,12 @@ router.get('/',(req,res)=>{
 	    query:{}, //查询条件
 	    projection:'-__v', //投影
 	    sort:{_id:-1}, //排序
-	    // populate:[{path:'article',select:'title'},{path:'user',select:'username'}]
 	}
 	pagination(options)//promise对象
 	.then((data)=>{//成功
 		res.render('admin/resource_list',{
 			userInfo:req.userInfo,
-			resource:data.docs,//每页有两个对象[{qwy,admin}],[{test1,test2}]
+			resources:data.docs,
 			page:data.page,//当前是第几页
 			list:data.list,//[1,2,3,4]
 			pages:data.pages,			
@@ -63,20 +63,20 @@ router.get('/add',(req,res)=>{
 
 
 //处理新增资源
-router.post('/add',upload.single('file',(req,res)=>{
+router.post('/add',upload.single('file'),(req,res)=>{
 	new ResourceModel({
 		name:req.body.name,
 		path:'/resource/'+req.file.filename
 	})
 	.save()
-	.then((newResource)=>{//插入成功,渲染页面成功
+	.then((resource)=>{//插入成功,渲染页面成功
 		res.render('admin/success',{
 			userInfo:req.userInfo,
 			message:'新增资源成功',
 			url:'/resource',
 		})
 	})
-}))
+})
 
 
 
