@@ -53,7 +53,7 @@ router.post('/login',(req,res)=>{
 	UserModel  //数据库里查找用户名和密码
 	.findOne({username:body.username,password:hmac(body.password)})//返回一个promise对象
 	.then((user)=>{//user就是查出来的用户名和密码这个对象
-		if(user){//登陆成功
+		if(user){
 			/*
 			result.data={//获取到数据库里的数据
 				_id:user._id,
@@ -66,13 +66,13 @@ router.post('/login',(req,res)=>{
 			//把带cookies的数据(键就是userinfo,id就是值)和result里面的数据返回到前端页面
 			*/
 		
-			req.session.userInfo={
+			req.session.userInfo={//在前台layout使用
 				_id:user._id,
 				username:user.username,
 				isAdmin:user.isAdmin
 			}
 			res.json(result);  //result.code  result.errmessage  result.data
-			
+			// console.log(result)
 		}else{
 			result.code=10,
 			result.errmessage='用户名或密码错误',

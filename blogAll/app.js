@@ -54,7 +54,7 @@ app.use((req,res,next)=>{
 
 //cookie+session  cookies是从前台发过来,session存到后台
 //发过来之后session从后台去取,找匹配的id
-app.use(session({
+app.use(session({//session是对cookies进行加密
 	//设置cookie名称
 	name:'pig',
 	//用它来对session cookie加盐,防止篡改
@@ -70,6 +70,7 @@ app.use(session({
     //设置session存储在数据库中
     store:new MongoStore({ mongooseConnection: mongoose.connection })   
 }))
+
 
 //取出userInfno用户信息,应该先存,在登录的时候存下来用户的信息
 app.use((req,res,next)=>{

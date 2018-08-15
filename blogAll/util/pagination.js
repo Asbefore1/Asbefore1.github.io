@@ -17,8 +17,8 @@ let pagination=(options)=>{
 		// req.query.page是指不传的情况下会走1,传非数字的话不能走
 		let page=1;
 
-		//不是数字的情况下
-		if(!isNaN(parseInt(options.page))){
+		//是数字的情况下
+		if(!isNaN(parseInt(options.page))){//parseInt转化成整数
 			page=parseInt(options.page)
 		}
 		
@@ -55,24 +55,27 @@ let pagination=(options)=>{
 
 			//获取所有信息,分配给模板
 			let query=options.model.find(options.query,options.projection);//'_id username isAdmin'只显示这么多
+			// console.log(query)
 			if(options.populate){
 				for(let i=0;i<options.populate.length;i++){
 					query=query.populate(options.populate[i])
 				}
 			}
+			
 			query
 			.sort(options.sort)
 			.skip(skip)
 			.limit(limit)
 			.then((docs)=>{
 				resolve({
-					docs:docs,
+					docs:docs,//order _id name
 					page:page*1, //默认page是字符串,做了字符串拼接,*1变成数字
 					list:list,
 					pages:pages
 				})
 				// console.log('1:::',docs)
 				// console.log(req.userInfo)
+				// console.log(docs)
 			})
 			// console.log(query)
 		})	

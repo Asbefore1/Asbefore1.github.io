@@ -25,7 +25,7 @@ router.use((req,res,next)=>{
 
 //显示管理员首页
 router.get('/',(req,res)=>{
-	res.render('admin/index',{
+	res.render('admin/index',{//render渲染页面
 		userInfo:req.userInfo
 	})
 })
@@ -39,11 +39,11 @@ router.get('/users',(req,res)=>{
 	let options = {
 		page: req.query.page,//需要显示的页码
 		model:UserModel, //操作的数据模型
-		query:{}, //查询条件
+		query:{}, //查询条件,查询所有
 		projection:'_id username isAdmin', //投影，
 		sort:{_id:-1} //排序
 	}
-
+	// console.log(req.query)//req上有query方法,拿到去掉?后面的对象{page:'2'}
 	pagination(options)
 	.then((data)=>{
 		res.render('admin/user_list',{
@@ -54,8 +54,11 @@ router.get('/users',(req,res)=>{
 			pages:data.pages,
 			url:'/admin/users'
 		});	
+		console.log(data)
 	})
 })
+
+
 
 //添加文章是处理图片上传
 router.post('/uploadImages',upload.single('upload'),(req,res)=>{

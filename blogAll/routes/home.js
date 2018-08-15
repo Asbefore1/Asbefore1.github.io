@@ -62,6 +62,7 @@ router.get("/comment/delete/:id",(req,res)=>{
 })
 
 
+
 //显示修改密码页面
 router.get('/password',(req,res)=>{
 	res.render('home/password',{

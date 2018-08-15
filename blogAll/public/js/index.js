@@ -87,7 +87,7 @@
 			$login.find('.err').html(errMsg);
 			return;
 		}else{//验证通过发送ajax请求到后台
-			$login.find('.err').html('');
+			$login.find('.err').html('');//即都正确
 			//发送数据到后端
 			$.ajax({
 				url:'/user/login',
@@ -98,7 +98,7 @@
 					password:password
 				}
 			})
-			.done(function(result){//登录成功
+			.done(function(result){//发送ajax成功
 				if(result.code===0){
 					//第一次进来的时候userInfo是一个空对象,也就是没有cookies数据
 					//$login.hide()隐藏,userInfo是空,相当于下面两行代码失效了
@@ -113,7 +113,7 @@
 					$login.find('.err').html(result.errmessage);
 				}
 			})
-			.fail(function(err){//失败
+			.fail(function(err){//发送ajax失败
 				console.log(err);
 			})
 		}

@@ -1,9 +1,9 @@
 {% extends './layout.html' %}
 {% block header %}
   {% if category %}
-    编辑列表
+    编辑分类
   {% else %}
-    新增列表
+    新增分类
   {% endif %}
 {% endblock %}<!-- 新增一般都是post请求 -->
 {% block content %}<!-- 用表单提交或者使用ajax请求 -->
@@ -22,7 +22,7 @@
   <div class="form-group">
     <label for="order" class="col-sm-2 control-label">排序</label>
     <div class="col-sm-4">
-      <input type="number" class="form-control" id="order" placeholder="order" name='order' value='{{ category.order }}'>
+      <input type="number" class="form-control" id="order"  name='order' value='{{ category.order }}'>
     </div>
   </div>
   <div class="form-group">

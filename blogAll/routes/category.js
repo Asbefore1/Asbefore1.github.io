@@ -19,19 +19,6 @@ router.use((req,res,next)=>{
 
 //显示分类管理首页
 router.get('/',(req,res)=>{
-	/*
-	CategoryModel.find({})//找到所有的
-	//categories作为一个参数代替所有的数据,即是一个数组,里面有很多对象
-	//eg:[ { _id: 5b6bbaa39f59021480141f90, name: 'lll', order: 0, __v: 0 },{ _id: 5b6bbab7b798fd2554416d02, name: 'HTML', order: 0, __v: 0 },]
-	.then((categories)=>{
-		res.render('admin/category_list',{
-			userInfo:req.userInfo,//{ _id: '5b6927573609880f989224f6',username: 'admin',isAdmin: true }
-			categories:categories
-		})
-		// console.log(req.categories)
-		// console.log(req.userInfo)
-	})
-	*/
 	let options={
 		page:req.query.page,//需要显示的页码
 		model:CategoryModel,//操作的数据模型
@@ -44,15 +31,13 @@ router.get('/',(req,res)=>{
 	.then((data)=>{//成功
 		res.render('admin/category_list',{
 			userInfo:req.userInfo,
-			categories:data.docs,//每页有两个对象[{qwy,admin}],[{test1,test2}]
+			categories:data.docs,//每页有两个对象//order _id name
 			page:data.page,//当前是第几页
 			list:data.list,//[1,2,3,4]
-			pages:data.pages,
+			pages:data.pages,//总页数
 			url:'/category'
 		})
-		// console.log(data.docs)
-		// console.log(data.page)
-		// console.log(data.list)
+		// console.log(data)
 	})
 })
 
@@ -69,20 +54,21 @@ router.get('/add',(req,res)=>{
 router.post('/add',(req,res)=>{	
 	// console.log(req.body)
 	let body=req.body;//使用了app.js里面的post请求的中间件
-	CategoryModel.findOne({name:body.name})
-	.then((cate)=>{//查询成功
+	CategoryModel.findOne({name:body.name})//不能插入同名的分类
+	.then((cate)=>{//查询成功(查询有成功也有失败)//cate是输入框里的内容
 		if(cate){//已经存在渲染错误页面
 			res.render('admin/fail',{
 				userInfo:req.userInfo,
 				message:'新增失败,已有同名分类,请重新输入',
 			})
+			// console.log('1::',cate)
 		}else{//不存在就插入
 			new CategoryModel({
 				name:body.name,
 				order:body.order
 			})
 			.save()
-			.then((newCate)=>{//插入成功,渲染页面成功
+			.then((newCate)=>{//插入成功
 				if(newCate){
 					res.render('admin/success',{
 						userInfo:req.userInfo,
@@ -90,6 +76,7 @@ router.post('/add',(req,res)=>{
 						url:'/category',
 					})
 				}
+				// console.log('1::',newCate)
 			})
 			.catch((e)=>{//插入失败,渲染错误页面
 				res.render('admin/fail',{
@@ -109,12 +96,15 @@ router.get('/edit/:id',(req,res)=>{
 	// console.log(id);	
 	CategoryModel.findById(id)
 	.then((category)=>{
+		// console.log(category)//在数据库里找到对应的id的数据
 		res.render('admin/category_add_edit',{
 			userInfo:req.userInfo,
 			category:category//{ _id: 5b6bd8c663f2f001f4203def, name: 'HTML', order: 0, __v: 0 }
 		})
 	})
 })
+
+
 
 //处理编辑请求
 router.post('/edit',(req,res)=>{
@@ -125,10 +115,11 @@ router.post('/edit',(req,res)=>{
 	//但会自动加一个id
 	CategoryModel.findById(body.id)
 	.then((category)=>{
+		// console.log(category)
 		if(category.name==body.name && category.order==body.order){
 			res.render('admin/fail',{
 				userInfo:req.userInfo,
-				message:'请修改数据后提交',
+				message:'请修改数据后提交'
 			})
 		}else{
 			CategoryModel.findOne({name:body.name,_id:{$ne:body.id}})
@@ -136,7 +127,7 @@ router.post('/edit',(req,res)=>{
 				if(newCate){
 					res.render('admin/fail',{
 						userInfo:req.userInfo,
-						message:'编辑分类失败,已有同名分类,请重新输入',
+						message:'编辑分类失败,已有同名分类,请重新输入'
 					})
 				}else{//在数据库没里找到,说明数据库里没有,可以重新写进去一个
 					//eg:5b6bd8c663f2f001f4203def就是body.id找到这个id去更新它

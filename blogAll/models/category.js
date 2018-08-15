@@ -5,7 +5,8 @@ const CategorySchema = new mongoose.Schema({
   	type:String
   },
   order:{
-  	type:Number
+  	type:Number,
+  	default:0
   }
 });
 
